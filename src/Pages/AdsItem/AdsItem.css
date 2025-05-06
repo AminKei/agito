@@ -1,0 +1,8 @@
+.card-item {
+  width: 450px;
+}
+@media only screen and (max-width: 900px) {
+  .card-item {
+    width: 350px;
+  }
+}
