@@ -7,26 +7,33 @@ import {
   Space,
   Button,
   Image,
+  message,
+  Alert,
 } from "antd";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   PhoneOutlined,
-  ShareAltOutlined,
   FlagOutlined,
   ArrowLeftOutlined,
   SaveOutlined,
-  SaveFilled,
+  ShareAltOutlined,
 } from "@ant-design/icons";
-import { Ad } from "../../Interface";
+import { Ad } from "../../Models/AdModel";
 
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import {
+  translateCategorisa,
+  translateCity,
+  translateCondition,
+} from "../../TranslateCases/TranslateCases";
+import RelatedAds from "../../Components/RelatedAds/RelatedAds";
+import { formatPrice } from "../../Hooks/formatPrice";
 
 const { Title, Text } = Typography;
 
-// Fix leaflet default icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -42,6 +49,27 @@ const AdsPage = () => {
   const { id } = useParams<{ id: string }>();
   const [ad, setAd] = useState<Ad | null>(null);
   const [showPhone, setShowPhone] = useState(false);
+  const [massage, setMassage] = useState("");
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: ad?.title,
+          text: `${ad?.title} - ${formatPrice(ad?.price || 0)}`,
+          url: window.location.href,
+        })
+        .catch((error) => console.log("Error sharing:", error));
+    } else {
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => {
+          message.success("لینک آگهی کپی شد");
+          setMassage("لینک آگهی کپی شد");
+        })
+        .catch((error: Error) => console.log("Error copying:", error));
+    }
+  };
 
   useEffect(() => {
     const storedAds = localStorage.getItem("ads");
@@ -51,60 +79,6 @@ const AdsPage = () => {
       setAd(foundAd || null);
     }
   }, [id]);
-
-  const translateCondition = (condition: string) => {
-    switch (condition) {
-      case "new":
-        return "نو";
-      case "like-new":
-        return "در حد نو";
-      case "used":
-        return "کارکرده";
-      case "needs-repair":
-        return "نیاز به تعمیر";
-      default:
-        return condition;
-    }
-  };
-  const translateCategorisa = (category: string) => {
-    switch (category) {
-      case "services":
-        return "خدمات";
-      case "vehicles":
-        return "خودرو";
-      case "property":
-        return "املاک";
-      case "home":
-        return "لوازم خانگی";
-      case "clothing":
-        return "پوشاک";
-      case "sports":
-        return "ورزشی";
-      case "books":
-        return "لوازم تحریر و کتاب";
-      default:
-        return category;
-    }
-  };
-
-  const translateCity = (city: string) => {
-    switch (city) {
-      case "tehran":
-        return "تهران";
-      case "mashhad":
-        return "مشهد";
-      case "isfahan":
-        return "اصفهان";
-      case "shiraz":
-        return "شیراز";
-      case "tabriz":
-        return "تبریز";
-      case "karaj":
-        return "کرج";
-      default:
-        return city;
-    }
-  };
 
   if (!ad)
     return (
@@ -148,7 +122,6 @@ const AdsPage = () => {
                       )
                     }
                   ></Card>
-                
                 </Col>
 
                 <Col xs={24} md={10}>
@@ -162,8 +135,12 @@ const AdsPage = () => {
                         {ad.title}
                       </Title>
                       <Text type="secondary" style={{ fontSize: "14px" }}>
-                        {ad.date}
-                        {translateCity(ad.city)} آگهی شده در
+                        آگهی شده{" "}
+                        {new Date(ad.date).toLocaleDateString("fa-IR") ===
+                        new Date().toLocaleDateString("fa-IR")
+                          ? "امروز "
+                          : "دیروز یا روز های قبل  "}
+                        در {translateCity(ad.city)}{" "}
                       </Text>
                     </div>
 
@@ -172,7 +149,7 @@ const AdsPage = () => {
                     <Space direction="vertical" size="middle">
                       <Typography.Paragraph>
                         <Text strong style={{ fontSize: "18px" }}>
-                          {ad.price.toLocaleString()} تومان
+                          قیمت: {formatPrice(ad.price)}
                         </Text>
                       </Typography.Paragraph>
 
@@ -188,8 +165,12 @@ const AdsPage = () => {
 
                       <Row gutter={10}>
                         <Col span={8}>
-                          <Button icon={<FlagOutlined />} block>
-                            گزارش مشکل
+                          <Button
+                            icon={<ShareAltOutlined />}
+                            block
+                            onClick={handleShare}
+                          >
+                            اشتراک گذاری آگهی
                           </Button>
                         </Col>
                         <Col span={8}>
@@ -199,10 +180,11 @@ const AdsPage = () => {
                         </Col>
                         <Col span={8}>
                           <Button icon={<SaveOutlined />} block>
-                           ذخیره در لیست
+                            ذخیره در لیست
                           </Button>
                         </Col>
                       </Row>
+                      {massage && <Alert message={massage} type="success" />}
                     </Space>
 
                     <Divider style={{ margin: "12px 0" }} />
@@ -232,32 +214,45 @@ const AdsPage = () => {
               >
                 {ad.description}
               </Typography.Paragraph>
-              <br/>
-              <Typography 
-                style={{ whiteSpace: "pre-line", color: "#313131", fontSize:"18px" }}
+              <br />
+              <Typography
+                style={{
+                  whiteSpace: "pre-line",
+                  color: "#313131",
+                  fontSize: "18px",
+                }}
               >
                 موقعیت روی نقشه
               </Typography>
-                {ad.location && (
-                    <div style={{ marginTop: 40, borderRadius: 8, overflow: "hidden",  width:"100%", height:"250px"}}>
-                      <MapContainer
-                        center={[ad.location.lat, ad.location.lng]}
-                        zoom={13}
-                        style={{ height: 300, width: "100%" }}
-                      >
-                        <TileLayer
-                          attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <Marker position={[ad.location.lat, ad.location.lng]} />
-                      </MapContainer>
-                    </div>
-                  )}
+              {ad.location && (
+                <div
+                  style={{
+                    marginTop: 40,
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    width: "100%",
+                    height: "250px",
+                  }}
+                >
+                  <MapContainer
+                    center={[ad.location.lat, ad.location.lng]}
+                    zoom={13}
+                    style={{ height: 300, width: "100%" }}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={[ad.location.lat, ad.location.lng]} />
+                  </MapContainer>
+                </div>
+              )}
             </Card>
-            
           </Space>
         </Col>
       </Row>
+      <RelatedAds />
     </div>
   );
-};export default AdsPage;
+};
+export default AdsPage;

@@ -12,16 +12,14 @@ import {
   Drawer,
   Image,
 } from "antd";
+import "./App.css";
 import AdsPage from "./Pages/AdsPage/AdsPage";
 import SignUp from "./Pages/SignUp/SignUp";
-import {
-  UserOutlined,
-  PlusOutlined,
-  NotificationOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, PlusOutlined, MenuOutlined } from "@ant-design/icons";
 import Footer from "./Components/Footer/Footer";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import Notifications from "./Components/Notifications/Notifications";
+import { menuItems } from "./Components/MenuItems/MenuItems";
 
 const { Header } = Layout;
 const {} = Input;
@@ -35,38 +33,12 @@ const App: React.FC = () => {
     setMenuVisible(!menuVisible);
   };
 
-  const menuItems = (
-    <>
-      <Menu.Item key="quations">سوالات متداول</Menu.Item>
-      <Menu.Item key="contact">تماس با ما</Menu.Item>
-      <Menu.Item key="contracts">قوانین و مقررات</Menu.Item>
-      <Menu.Item key="supuert">پشتیبانی</Menu.Item>
-      <Menu.Item key="home">
-        <Link to={"/"}>خانه</Link>
-      </Menu.Item>
-    </>
-  );
-
   return (
     <Layout style={{ background: "none" }}>
-      <Header
-        style={{
-          background: "#fff",
-          padding: "0 20px",
-          position: "fixed",
-          width: "100%",
-          marginTop: "-1vh",
-          zIndex: 10000,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <Header className="headerAppBar">
         <Space size={isMobile ? "small" : "large"} wrap>
           <Link to="/add">
             <Button type="primary" icon={<PlusOutlined />}>
-              {/* {!isMobile && "ثبت آگهی"} */}
               ثبت آگهی
             </Button>
           </Link>
@@ -75,9 +47,7 @@ const App: React.FC = () => {
               {!isMobile && "ورود / ثبت نام"}
             </Button>
           </Link>
-          <Button icon={<NotificationOutlined />}>
-            {!isMobile && "اعلان ها"}
-          </Button>
+          <Notifications />
         </Space>
         <Space
           style={{

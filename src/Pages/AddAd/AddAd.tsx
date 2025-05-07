@@ -14,6 +14,7 @@ import {
   message,
   InputNumber,
   ConfigProvider,
+  Alert,
 } from "antd";
 import {
   UploadOutlined,
@@ -24,8 +25,6 @@ import {
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-const { Title } = Typography;
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -58,6 +57,9 @@ const AddAd: React.FC = () => {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
+  const [showSuccess, setShowSuccess] = useState(false);
+
+
 
   const handleFinish = (values: any) => {
     setLoading(true);
@@ -100,9 +102,12 @@ const AddAd: React.FC = () => {
 
       localStorage.setItem("ads", JSON.stringify([newAd, ...ads]));
 
+      setShowSuccess(true);
       message.success("آگهی با موفقیت ثبت شد");
 
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (error) {
       console.error("Error saving ad:", error);
       message.error("خطا در ذخیره‌سازی آگهی");
@@ -114,11 +119,30 @@ const AddAd: React.FC = () => {
   return (
     <ConfigProvider direction="rtl">
       <Row justify="center" style={{ minHeight: "100vh" }}>
-        <Col xs={24} sm={24} md={20} lg={16} xl={20}>
-          <Card bordered={false} style={{ borderRadius: 8 }}>
-            <Title level={4} style={{ textAlign: "center", marginBottom: 30 }}>
-              افزودن آگهی جدید
-            </Title>
+        <Col xs={24} sm={24} md={20} lg={16} xl={20} title="">
+          <Card
+            bordered={false}
+            style={{ borderRadius: 8 }}
+            title="افزودن آگهی جدید"
+          >
+            {showSuccess && (
+              <Alert
+                message="آگهی با موفقیت ثبت شد"
+                type="success"
+                showIcon
+                style={{
+                  marginBottom: 16,
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 1000,
+                  textAlign: "center",
+                  padding: "40px 140px",
+                  fontSize: "20px",
+                }}
+              />
+            )}
             <Divider />
             <Form
               form={form}

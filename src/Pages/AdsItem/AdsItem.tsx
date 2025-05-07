@@ -3,7 +3,6 @@ import React from "react";
 import { List, Card, Typography, Space, Tag, Image } from "antd";
 import { Link } from "react-router-dom";
 import {
-  ClockCircleOutlined,
   DeleteOutlined,
   EnvironmentOutlined,
   EyeOutlined,
@@ -13,23 +12,9 @@ import {
   translateCity,
   translateCondition,
 } from "../../TranslateCases/TranslateCases";
+import { formatPrice } from "../../Hooks/formatPrice";
+import { Ad } from "../../Models/AdModel";
 const { Text } = Typography;
-
-export interface Ad {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  condition: string;
-  image: string[];
-  date: string;
-  sity: string;
-  phone: string;
-  address: string;
-  urgent?: boolean;
-  negotiable?: boolean;
-}
 
 interface AdsListProps {
   ads: Ad[];
@@ -37,11 +22,6 @@ interface AdsListProps {
 }
 
 const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
-  const formatPrice = (price: number) => {
-    if (price === 0) return "توافقی";
-    return `${price.toLocaleString()} تومان`;
-  };
-
   return (
     <List
       style={{ width: "85%" }}
@@ -67,9 +47,9 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                 gap: "16px",
               }}
             >
-              {/* <Space onClick={() => onDelete(ad.id)}>
+              <Space onClick={() => onDelete(ad.id)}>
                 <DeleteOutlined />
-              </Space> */}
+              </Space>
               <div
                 style={{
                   display: "flex",
@@ -127,14 +107,10 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                     justifyContent: "flex-start",
                   }}
                 >
-                  {/* <Space>
-                    <ClockCircleOutlined style={{ color: "#1890ff" }} />
-                    <Text style={{ fontSize: "12px" }}>{ad.date}</Text>
-                  </Space> */}
                   <Space>
                     <EnvironmentOutlined style={{ color: "#1890ff" }} />
                     <Text style={{ fontSize: "12px" }}>
-                      در {translateCity(ad.sity)}
+                      در {translateCity(ad.city)}
                     </Text>
                   </Space>
                 </Space>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { message } from "antd";
-import { Ad } from "../../Interface";
+import { Ad } from "../../Models/AdModel";
 
 export const useHomeState = () => {
   const [ads, setAds] = useState<Ad[]>([]);

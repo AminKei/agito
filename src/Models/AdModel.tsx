@@ -11,4 +11,6 @@ export interface Ad {
   address: string;
   phone: string;
   location?: { lat: number; lng: number };
+  urgent?: boolean;
+  negotiable?: boolean;
 }

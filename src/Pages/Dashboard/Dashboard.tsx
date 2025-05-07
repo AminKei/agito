@@ -279,7 +279,6 @@ const Dashboard: React.FC = () => {
             position: "sticky",
             top: 0,
             zIndex: 1,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
           }}
         >
           <p style={{ margin: 0, fontSize: "18px", fontWeight: "bold" }}>

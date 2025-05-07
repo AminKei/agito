@@ -31,3 +31,25 @@ export const translateCity = (city: string) => {
       return city;
   }
 };
+
+
+export const translateCategorisa = (category: string) => {
+    switch (category) {
+      case "services":
+        return "خدمات";
+      case "vehicles":
+        return "خودرو";
+      case "property":
+        return "املاک";
+      case "home":
+        return "لوازم خانگی";
+      case "clothing":
+        return "پوشاک";
+      case "sports":
+        return "ورزشی";
+      case "books":
+        return "لوازم تحریر و کتاب";
+      default:
+        return category;
+    }
+  };
