@@ -1,31 +1,18 @@
-import { Button, ConfigProvider, Form, Input, Typography } from "antd";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Alert, Button, ConfigProvider, Form, Input, Typography } from "antd";
+import useSignUp from "./useSignUp";
 
 const SignUp = () => {
-  const navigate = useNavigate();
-  const [form] = Form.useForm();
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [showOTP, setShowOTP] = useState(false);
-  const [otpvalue, setotpvalue] = useState<number>();
-  const handlePhoneSubmit = (values: any) => {
-    setPhoneNumber(values.phone);
-    setShowOTP(true);
-  };
-
-  const handleOTPSubmit = (values: any) => {
-    console.log("کد تایید ارسال شد:", values.otp);
-    if (otpvalue === 431291) {
-      navigate("/dashboard");
-    } else {
-      form.setFields([
-        {
-          name: "otp",
-          errors: ["کد وارد شده صحیح نمیباشد"],
-        },
-      ]);
-    }
-  };
+  const {
+    form,
+    handleOTPSubmit,
+    handlePhoneSubmit,
+    phoneNumber,
+    setShowOTP,
+    setotpvalue,
+    showOTP,
+    showSuccess,
+    otpvalue,
+  } = useSignUp();
 
   return (
     <div
@@ -95,6 +82,24 @@ const SignUp = () => {
               تغییر شماره موبایل
             </Button>
           </Form>
+        )}
+        {showSuccess && (
+          <Alert
+            message="ورود موفقیت آمیز بود خوش آمدید"
+            type="success"
+            showIcon
+            style={{
+              marginBottom: 16,
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 1000,
+              textAlign: "center",
+              padding: "40px 140px",
+              fontSize: "20px",
+            }}
+          />
         )}
       </ConfigProvider>
     </div>

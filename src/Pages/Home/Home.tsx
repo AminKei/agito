@@ -37,7 +37,7 @@ const Home: React.FC = () => {
   } = useHomeState();
 
   const FilterContent = () => (
-    <Space direction="vertical" style={{ width: "100%", gap: "15px" }}>
+    <Space direction="vertical" style={{ width: "100%", gap: "15px" , marginTop:"3px"}}>
       {/* Price Range Dropdown */}
       <div>
         <p
