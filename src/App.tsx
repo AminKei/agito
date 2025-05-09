@@ -60,6 +60,7 @@ const App: React.FC = () => {
               placement="right"
               onClose={toggleMenu}
               visible={menuVisible}
+              width={"80%"}
             >
               <Menu
                 mode="vertical"

@@ -259,7 +259,7 @@ const Home: React.FC = () => {
                 type="primary"
                 icon={<FilterOutlined />}
                 onClick={() => setShowMobileFilter(true)}
-                style={{ width: "25%", height: "40px" }}
+                style={{ width: "25%", height: "38px" }}
               >
                 فیلترها
               </Button>
@@ -299,7 +299,7 @@ const Home: React.FC = () => {
           placement="right"
           onClose={() => setShowMobileFilter(false)}
           open={showMobileFilter}
-          width="100%"
+          width="80%"
         >
           <FilterContent />
         </Drawer>
