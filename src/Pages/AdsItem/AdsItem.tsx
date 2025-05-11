@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { List, Card, Typography, Space, Tag, Image } from "antd";
 import { Link } from "react-router-dom";
@@ -14,6 +14,8 @@ import {
 } from "../../TranslateCases/TranslateCases";
 import { formatPrice } from "../../Hooks/formatPrice";
 import { Ad } from "../../Models/AdModel";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
 const { Text } = Typography;
 
 interface AdsListProps {
@@ -22,6 +24,17 @@ interface AdsListProps {
 }
 
 const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
+  const [theme, setTheme] = useState<string>("light"); // default to light
+
+  const curenntTheme = useSelector(
+    (state: RootState) => (state.theme as { theme: string }).theme
+  );
+
+  useEffect(() => {
+    localStorage.setItem("theme", curenntTheme);
+    setTheme(curenntTheme);
+  }, [curenntTheme]);
+
   return (
     <List
       style={{ width: "85%" }}
@@ -38,6 +51,9 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                 display: "flex",
                 flexDirection: "row",
                 textAlign: "right",
+                backgroundColor: theme === "light" ? "#ffffff" : "#252525",
+                transition: "all 0.3s ease",
+                color: theme === "light" ? "#252525" : "#ffffff",
               }}
               bodyStyle={{
                 padding: "12px",
@@ -71,6 +87,9 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                     WebkitBoxOrient: "vertical",
                     lineHeight: "1.5",
                     direction: "rtl",
+                    backgroundColor: theme === "light" ? "#ffffff" : "#252525",
+                    transition: "all 0.3s ease",
+                    color: theme === "light" ? "#252525" : "#ffffff",
                   }}
                 >
                   {ad.title}
@@ -109,7 +128,15 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                 >
                   <Space>
                     <EnvironmentOutlined style={{ color: "#1890ff" }} />
-                    <Text style={{ fontSize: "12px" }}>
+                    <Text
+                      style={{
+                        fontSize: "12px",
+                        backgroundColor:
+                          theme === "light" ? "#ffffff" : "#252525",
+                        transition: "all 0.3s ease",
+                        color: theme === "light" ? "#252525" : "#ffffff",
+                      }}
+                    >
                       در {translateCity(ad.city)}
                     </Text>
                   </Space>

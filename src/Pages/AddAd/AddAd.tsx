@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -25,6 +25,8 @@ import {
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -58,8 +60,7 @@ const AddAd: React.FC = () => {
     null
   );
   const [showSuccess, setShowSuccess] = useState(false);
-
-
+  const [theme, setTheme] = useState<string>("light"); // default to light
 
   const handleFinish = (values: any) => {
     setLoading(true);
@@ -116,13 +117,32 @@ const AddAd: React.FC = () => {
     }
   };
 
+  const curenntTheme = useSelector(
+    (state: RootState) => (state.theme as { theme: string }).theme
+  );
+
+  useEffect(() => {
+    localStorage.setItem("theme", curenntTheme);
+    setTheme(curenntTheme);
+  }, [curenntTheme]);
+
   return (
     <ConfigProvider direction="rtl">
-      <Row justify="center" style={{ minHeight: "100vh" }}>
+      <Row
+        justify="center"
+        style={{
+          minHeight: "100vh",
+        }}
+      >
         <Col xs={24} sm={24} md={20} lg={16} xl={20} title="">
           <Card
             bordered={false}
-            style={{ borderRadius: 8 }}
+            style={{
+              borderRadius: 8,
+              backgroundColor: theme === "light" ? "#ffffff" : "#141414",
+              transition: "all 0.3s ease",
+              color: theme === "light" ? "#ffffff" : "#141414"
+            }}
             title="افزودن آگهی جدید"
           >
             {showSuccess && (

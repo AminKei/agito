@@ -31,6 +31,8 @@ import {
 } from "../../TranslateCases/TranslateCases";
 import RelatedAds from "../../Components/RelatedAds/RelatedAds";
 import { formatPrice } from "../../Hooks/formatPrice";
+import { RootState } from "../../Redux/store";
+import { useSelector } from "react-redux";
 
 const { Title, Text } = Typography;
 
@@ -50,6 +52,7 @@ const AdsPage = () => {
   const [ad, setAd] = useState<Ad | null>(null);
   const [showPhone, setShowPhone] = useState(false);
   const [massage, setMassage] = useState("");
+  const [theme, setTheme] = useState<string>("light"); // default to light
 
   const handleShare = () => {
     if (navigator.share) {
@@ -71,6 +74,15 @@ const AdsPage = () => {
     }
   };
 
+  const curenntTheme = useSelector(
+    (state: RootState) => (state.theme as { theme: string }).theme
+  );
+
+  useEffect(() => {
+    localStorage.setItem("theme", curenntTheme);
+    setTheme(curenntTheme);
+  }, [curenntTheme]);
+
   useEffect(() => {
     const storedAds = localStorage.getItem("ads");
     if (storedAds) {
@@ -88,7 +100,12 @@ const AdsPage = () => {
     );
 
   return (
-    <div style={{ minHeight: "100vh", textAlign: "right" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        textAlign: "right",
+      }}
+    >
       <Row justify="center" gutter={[16, 16]}>
         <Col xs={24} sm={22} md={20} lg={18} xl={16}>
           <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -99,7 +116,15 @@ const AdsPage = () => {
               <ArrowLeftOutlined />
               بازگشت به صفحه اصلی
             </Link>
-            <Card bordered={false} style={{ marginBottom: "16px" }}>
+            <Card
+              bordered={false}
+              style={{
+                marginBottom: "16px",
+                backgroundColor: theme === "light" ? "#ffffff" : "#252525",
+                color: theme === "light" ? "#ececec" : "#252525",
+                transition: "all 0.3s ease",
+              }}
+            >
               <Row gutter={[24, 24]}>
                 <Col xs={24} md={14}>
                   <Card
@@ -115,6 +140,10 @@ const AdsPage = () => {
                             borderRadius: "8px",
                             height: "400px",
                             objectFit: "cover",
+                            backgroundColor:
+                              theme === "light" ? "#ffffff" : "#252525",
+                            transition: "all 0.3s ease",
+                            color: theme === "light" ? "#252525" : "#ffffff",
                           }}
                         />
                       ) : (
@@ -131,10 +160,24 @@ const AdsPage = () => {
                     style={{ width: "100%" }}
                   >
                     <div>
-                      <Title level={5} style={{ marginBottom: "8px" }}>
+                      <p
+                        // level={5}
+                        style={{
+                          marginBottom: "8px",
+                          color: theme === "light" ? "#181818" : "#eeeaea",
+                          transition: "all 0.3s ease",
+                        }}
+                      >
                         {ad.title}
-                      </Title>
-                      <Text type="secondary" style={{ fontSize: "14px" }}>
+                      </p>
+                      <Text
+                        type="secondary"
+                        style={{
+                          fontSize: "14px",
+                          color: theme === "light" ? "#181818" : "#eeeaea",
+                          transition: "all 0.3s ease",
+                        }}
+                      >
                         آگهی شده{" "}
                         {new Date(ad.date).toLocaleDateString("fa-IR") ===
                         new Date().toLocaleDateString("fa-IR")
@@ -144,11 +187,24 @@ const AdsPage = () => {
                       </Text>
                     </div>
 
-                    <Divider style={{ margin: "12px 0" }} />
+                    <Divider
+                      style={{
+                        margin: "12px 0",
+                        color: theme === "light" ? "#181818" : "#eeeaea",
+                        transition: "all 0.3s ease",
+                      }}
+                    />
 
                     <Space direction="vertical" size="middle">
                       <Typography.Paragraph>
-                        <Text strong style={{ fontSize: "18px" }}>
+                        <Text
+                          strong
+                          style={{
+                            fontSize: "18px",
+                            color: theme === "light" ? "#181818" : "#eeeaea",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
                           قیمت: {formatPrice(ad.price)}
                         </Text>
                       </Typography.Paragraph>
@@ -191,26 +247,85 @@ const AdsPage = () => {
 
                     <Space direction="vertical" size="small">
                       <div>
-                        <Text type="secondary">دسته‌بندی:</Text>
-                        <Text> {translateCategorisa(ad.category)}</Text>
+                        <Text
+                          type="secondary"
+                          style={{
+                            color: theme === "light" ? "#181818" : "#eeeaea",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          دسته‌بندی:
+                        </Text>
+                        <Text
+                          style={{
+                            color: theme === "light" ? "#181818" : "#eeeaea",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          {" "}
+                          {translateCategorisa(ad.category)}
+                        </Text>
                       </div>
                       <div>
-                        <Text type="secondary">وضعیت:</Text>
-                        <Text> {translateCondition(ad.condition)}</Text>
+                        <Text
+                          type="secondary"
+                          style={{
+                            color: theme === "light" ? "#181818" : "#eeeaea",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          وضعیت:
+                        </Text>
+                        <Text
+                          style={{
+                            color: theme === "light" ? "#181818" : "#eeeaea",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          {" "}
+                          {translateCondition(ad.condition)}
+                        </Text>
                       </div>
                       <div>
-                        <Text type="secondary">محل:</Text>
-                        <Text> {ad.address}</Text>
+                        <Text
+                          type="secondary"
+                          style={{
+                            color: theme === "light" ? "#181818" : "#eeeaea",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          محل:
+                        </Text>
+                        <Text
+                          style={{
+                            color: theme === "light" ? "#181818" : "#eeeaea",
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          {" "}
+                          {ad.address}
+                        </Text>
                       </div>
                     </Space>
                   </Space>
                 </Col>
               </Row>
-              <Title level={4} style={{ marginBottom: "16px" }}>
+              <Title
+                level={4}
+                style={{
+                  marginBottom: "16px",
+                  color: theme === "light" ? "#181818" : "#eeeaea",
+                  transition: "all 0.3s ease",
+                }}
+              >
                 توضیحات
               </Title>
               <Typography.Paragraph
-                style={{ whiteSpace: "pre-line", color: "#313131" }}
+                style={{
+                  whiteSpace: "pre-line",
+                  color: theme === "light" ? "#181818" : "#eeeaea",
+                  transition: "all 0.3s ease",
+                }}
               >
                 {ad.description}
               </Typography.Paragraph>
@@ -218,8 +333,9 @@ const AdsPage = () => {
               <Typography
                 style={{
                   whiteSpace: "pre-line",
-                  color: "#313131",
                   fontSize: "18px",
+                  color: theme === "light" ? "#181818" : "#eeeaea",
+                  transition: "all 0.3s ease",
                 }}
               >
                 موقعیت روی نقشه
