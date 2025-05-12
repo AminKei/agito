@@ -109,13 +109,13 @@ const App: React.FC = () => {
         )}
 
         <Space style={{ gap: "20px" }}>
-          {!isMobile && (
+          {/* {!isMobile && ( */}
             <Typography
-            // style={{ color: theme === "light" ? "#4B0099" : "#9B6BFF" }}
+            style={{ color:  "#414eff" }}
             >
               آگیتو
             </Typography>
-          )}
+          {/* )} */}
           <Image
             src={`${process.env.PUBLIC_URL}favicon.png`}
             preview={false}
