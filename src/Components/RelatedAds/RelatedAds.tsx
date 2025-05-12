@@ -6,20 +6,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { formatPrice } from "../../Hooks/formatPrice";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
 
 const RelatedAds = () => {
-  const [theme, setTheme] = useState<string>("light"); // default to light
-  const curenntTheme = useSelector(
-    (state: RootState) => (state.theme as { theme: string }).theme
-  );
-
-  useEffect(() => {
-    localStorage.setItem("theme", curenntTheme);
-    setTheme(curenntTheme);
-  }, [curenntTheme]);
-
   const [ads, setAds] = useState(() => {
     const storedAds = localStorage.getItem("ads");
     return storedAds
@@ -83,9 +71,6 @@ const RelatedAds = () => {
       style={{
         padding: "20px",
         borderRadius: "8px",
-        backgroundColor: theme === "light" ? "#ffffff" : "#252525",
-        transition: "all 0.3s ease",
-        color: theme === "light" ? "#ffffff" : "#252525",
       }}
       dir="rtl"
       className="related-ads-container"
@@ -98,11 +83,7 @@ const RelatedAds = () => {
           marginBottom: "16px",
         }}
       >
-        <Typography.Title level={4} style={{
-           backgroundColor: theme === "light" ? "#ffffff" : "#252525",
-           transition: "all 0.3s ease",
-           color: theme === "light" ? "#252525" : "#ffffff",
-        }}>آگهی های مرتبط</Typography.Title>
+        <Typography.Title level={4}>آگهی های مرتبط</Typography.Title>
         <div>
           <Button
             shape="circle"
@@ -124,9 +105,6 @@ const RelatedAds = () => {
                   borderRadius: "12px",
                   overflow: "hidden",
                   width: "310px",
-                  backgroundColor: theme === "light" ? "#ffffff" : "#252525",
-                  transition: "all 0.3s ease",
-                  color: theme === "light" ? "#ffffff" : "#252525",
                 }}
                 cover={
                   <Image
@@ -143,14 +121,7 @@ const RelatedAds = () => {
                 <Card.Meta
                   title={
                     <div style={{ fontWeight: "bold", fontSize: "14px" }}>
-                      <Typography
-                        style={{
-                          color: theme === "light" ? "#161616" : "#c5c5c5",
-                          transition: "all 0.3s ease",
-                        }}
-                      >
-                        {ad.title}
-                      </Typography>
+                      {ad.title}
                     </div>
                   }
                   description={
@@ -160,14 +131,7 @@ const RelatedAds = () => {
                         fontSize: "14px",
                       }}
                     >
-                      <Typography
-                        style={{
-                          color: theme === "light" ? "#161616" : "#c7c7c7",
-                          transition: "all 0.3s ease",
-                        }}
-                      >
-                        قیمت: {formatPrice(ad.price)}
-                      </Typography>
+                      <Typography>قیمت: {formatPrice(ad.price)}</Typography>
                     </div>
                   }
                 />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Select,
   Space,
@@ -12,22 +12,10 @@ import {
 import AdsItem from "../AdsItem/AdsItem";
 import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
 import { useHomeState } from "./useHomeState";
-import { useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
 
 const { Sider, Content } = Layout;
 
 const Home: React.FC = () => {
-  const [theme, setTheme] = useState<string>("light"); // default to light
-  const curenntTheme = useSelector(
-    (state: RootState) => (state.theme as { theme: string }).theme
-  );
-
-  useEffect(() => {
-    localStorage.setItem("theme", curenntTheme);
-    setTheme(curenntTheme);
-  }, [curenntTheme]);
-
   const {
     priceRange,
     setPriceRange,
@@ -45,21 +33,11 @@ const Home: React.FC = () => {
     setShowMobileFilter,
     handleDelete,
     handleSearch,
-    filteredAds,
+    filteredAds
   } = useHomeState();
 
   const FilterContent = () => (
-    <Space
-      direction="vertical"
-      style={{
-        width: "100%",
-        gap: "15px",
-        marginTop: "3px",
-        backgroundColor: theme === "light" ? "#ffffff" : "#252525",
-        transition: "all 0.3s ease",
-        color: theme === "light" ? "#252525" : "#ffffff",
-      }}
-    >
+    <Space direction="vertical" style={{ width: "100%", gap: "15px" , marginTop:"3px"}}>
       {/* Price Range Dropdown */}
       <div>
         <p
@@ -238,15 +216,15 @@ const Home: React.FC = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "row",
+        backgroundColor:"white",
+
       }}
     >
       <Content
         style={{
           flex: 1,
           padding: "0px",
-          backgroundColor: theme === "light" ? "#ffffff" : "#252525",
-          transition: "all 0.3s ease",
-          color: theme === "light" ? "#252525" : "#ffffff",
+          background: "#fff",
         }}
       >
         {/* Search and Filter Buttons */}
@@ -276,9 +254,7 @@ const Home: React.FC = () => {
                 size="large"
                 suffix={<SearchOutlined />}
                 onChange={(e) => handleSearch(e.target.value)}
-                onPressEnter={(e) =>
-                  handleSearch((e.target as HTMLInputElement).value)
-                }
+                onPressEnter={(e) => handleSearch((e.target as HTMLInputElement).value)}
               />
               <Button
                 type="primary"
@@ -296,9 +272,7 @@ const Home: React.FC = () => {
               size="large"
               suffix={<SearchOutlined />}
               onChange={(e) => handleSearch(e.target.value)}
-              onPressEnter={(e) =>
-                handleSearch((e.target as HTMLInputElement).value)
-              }
+              onPressEnter={(e) => handleSearch((e.target as HTMLInputElement).value)}
             />
           )}
         </div>

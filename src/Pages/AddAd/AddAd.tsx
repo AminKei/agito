@@ -138,10 +138,7 @@ const AddAd: React.FC = () => {
           <Card
             bordered={false}
             style={{
-              borderRadius: 8,
-              backgroundColor: theme === "light" ? "#ffffff" : "#141414",
-              transition: "all 0.3s ease",
-              color: theme === "light" ? "#ffffff" : "#141414"
+              borderRadius: 8
             }}
             title="افزودن آگهی جدید"
           >
