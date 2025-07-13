@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { List, Card, Typography, Space, Tag, Image } from "antd";
 import { Link } from "react-router-dom";
 import {
@@ -22,10 +21,19 @@ interface AdsListProps {
 }
 
 const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
+  // مدیریت وضعیت خطا برای تصاویر
+  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+
+  const handleImageError = (id: string) => {
+    setImageErrors((prev) => ({ ...prev, [id]: true }));
+  };
+
   return (
     <List
-      style={{ width: "85%" }}
-      grid={{ gutter: 15, xs: 1, sm: 2, md: 2, lg: 2 }}
+      style={{ width: "100%", margin: "0 auto" }} // عرض کامل برای نمایش همه آگهی‌ها
+      grid={{ gutter: 15, xs: 1, sm: 2, md: 3, lg: 4 }} // بهینه‌سازی تعداد ستون‌ها
       dataSource={ads}
       renderItem={(ad) => (
         <List.Item>
@@ -38,6 +46,7 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                 display: "flex",
                 flexDirection: "row",
                 textAlign: "right",
+                overflow: "hidden", // جلوگیری از سرریز
               }}
               bodyStyle={{
                 padding: "12px",
@@ -47,9 +56,36 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                 gap: "16px",
               }}
             >
-              <Space onClick={() => onDelete(ad.id)}>
-                <DeleteOutlined />
-              </Space>
+              <Card
+                cover={
+                  ad.image && ad.image.length > 0 ? (
+                    <Image
+                      width={130}
+                      height={125}
+                      style={{ borderRadius: "10px", objectFit: "cover" }}
+                      src={
+                        imageErrors[ad.id]
+                          ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtEY1E5uyX1bU9au2oF74LoFPdthQlmZ5YIQ&s"
+                          : ad.image[0]
+                      }
+                      preview={{
+                        mask: <EyeOutlined />,
+                        maskClassName: "custom-mask",
+                      }}
+                      onError={() => handleImageError(ad.id)}
+                      alt={ad.title}
+                    />
+                  ) : (
+                    <Image
+                      width={130}
+                      height={125}
+                      style={{ borderRadius: "10px", objectFit: "cover" }}
+                      src="https://via.placeholder.com/130x125"
+                      alt="Placeholder"
+                    />
+                  )
+                }
+              />
               <div
                 style={{
                   display: "flex",
@@ -57,6 +93,7 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                   gap: "8px",
                   flex: 1,
                   justifyContent: "space-between",
+                  overflow: "hidden", // جلوگیری از سرریز متن
                 }}
               >
                 <Typography.Title
@@ -65,11 +102,12 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                     margin: 0,
                     fontSize: "12px",
                     overflow: "hidden",
-                    textOverflow: "clip",
+                    textOverflow: "ellipsis",
                     display: "-webkit-box",
-                    WebkitLineClamp: 4,
+                    WebkitLineClamp: 2, // محدود کردن به 2 خط
                     WebkitBoxOrient: "vertical",
                     lineHeight: "1.5",
+                    marginBottom: "-4px",
                     direction: "rtl",
                   }}
                 >
@@ -83,7 +121,7 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                     direction: "rtl",
                   }}
                 >
-                  {formatPrice(ad.price)}
+                  {formatPrice(ad.price)} تومان
                 </Text>
                 <Space
                   style={{
@@ -97,7 +135,8 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                   <Tag color="blue" style={{ fontSize: "12px" }}>
                     {translateCondition(ad.condition)}
                   </Tag>
-                  {ad.negotiable && <Tag color="green">قابل معاوضه</Tag>}
+                  {ad.negotiable && <Tag color="green">قابل مذاکره</Tag>}
+                  {ad.urgent && <Tag color="red">فوری</Tag>}
                 </Space>
                 <Space
                   size="small"
@@ -109,32 +148,22 @@ const AdsItem: React.FC<AdsListProps> = ({ ads, onDelete }) => {
                 >
                   <Space>
                     <EnvironmentOutlined style={{ color: "#1890ff" }} />
-                    <Text
-                      style={{
-                        fontSize: "12px",
-                      }}
-                    >
+                    <Text style={{ fontSize: "12px" }}>
                       در {translateCity(ad.city)}
                     </Text>
                   </Space>
                 </Space>
               </div>
-              <Card
-                cover={
-                  ad.image ? (
-                    <Image
-                      width={130}
-                      height={125}
-                      style={{ borderRadius: "10px", objectFit: "cover" }}
-                      src={ad.image[0]}
-                      preview={{
-                        mask: <EyeOutlined />,
-                        maskClassName: "custom-mask",
-                      }}
-                    />
-                  ) : null
-                }
-              ></Card>{" "}
+              {/* <Space
+                style={{ alignSelf: "flex-start", marginLeft: "10px" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(ad.id);
+                }}
+              >
+                <DeleteOutlined style={{ color: "#ff4d4f", cursor: "pointer" }} />
+              </Space> */}
             </Card>
           </Link>
         </List.Item>

@@ -9,9 +9,10 @@ import {
   Image,
   message,
   Alert,
+  Tag, // اضافه کردن Tag برای نمایش urgent و negotiable
 } from "antd";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   PhoneOutlined,
   FlagOutlined,
@@ -20,7 +21,6 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 import { Ad } from "../../Models/AdModel";
-
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -31,6 +31,7 @@ import {
 } from "../../TranslateCases/TranslateCases";
 import RelatedAds from "../../Components/RelatedAds/RelatedAds";
 import { formatPrice } from "../../Hooks/formatPrice";
+import ContractPermisens from "../../Components/ContractPermisens/ContractPermisens";
 
 const { Title, Text } = Typography;
 
@@ -46,6 +47,8 @@ L.Icon.Default.mergeOptions({
 });
 
 const AdsPage = () => {
+  const Location = useLocation();
+
   const { id } = useParams<{ id: string }>();
   const [ad, setAd] = useState<Ad | null>(null);
   const [showPhone, setShowPhone] = useState(false);
@@ -92,13 +95,19 @@ const AdsPage = () => {
       <Row justify="center" gutter={[16, 16]}>
         <Col xs={24} sm={22} md={20} lg={18} xl={16}>
           <Space direction="vertical" size="large" style={{ width: "100%" }}>
-            <Link
-              to="/"
-              style={{ gap: "10px", justifyContent: "end", display: "flex" }}
+            <Row
+              justify={"space-between"}
+              style={{ display: "flex", alignItems: "center", color: "gray" }}
             >
-              <ArrowLeftOutlined />
-              بازگشت به صفحه اصلی
-            </Link>
+              <p color="red">همه آگهی ها{Location.pathname}</p>
+              <Link
+                to="/"
+                style={{ gap: "10px", justifyContent: "end", display: "flex" }}
+              >
+                <ArrowLeftOutlined />
+                بازگشت به صفحه اصلی
+              </Link>
+            </Row>
             <Card bordered={false} style={{ marginBottom: "16px" }}>
               <Row gutter={[24, 24]}>
                 <Col xs={24} md={14}>
@@ -106,9 +115,13 @@ const AdsPage = () => {
                     bordered={false}
                     style={{ boxShadow: "none" }}
                     cover={
-                      ad.image ? (
+                      ad.image && ad.image.length > 0 ? (
                         <Image
                           src={ad.image[0]}
+                          onError={(error) => {
+                            error.currentTarget.src =
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtEY1E5uyX1bU9au2oF74LoFPdthQlmZ5YIQ&s";
+                          }}
                           alt={ad.title}
                           style={{
                             width: "100%",
@@ -131,7 +144,7 @@ const AdsPage = () => {
                     style={{ width: "100%" }}
                   >
                     <div>
-                      <Title level={5} style={{ marginBottom: "8px" }}>
+                      <Title level={4} style={{ marginBottom: "8px" }}>
                         {ad.title}
                       </Title>
                       <Text type="secondary" style={{ fontSize: "14px" }}>
@@ -139,8 +152,8 @@ const AdsPage = () => {
                         {new Date(ad.date).toLocaleDateString("fa-IR") ===
                         new Date().toLocaleDateString("fa-IR")
                           ? "امروز "
-                          : "دیروز یا روز های قبل  "}
-                        در {translateCity(ad.city)}{" "}
+                          : "دیروز یا روز‌های قبل "}
+                        در {translateCity(ad.city)}
                       </Text>
                     </div>
 
@@ -160,7 +173,11 @@ const AdsPage = () => {
                         block
                         onClick={() => setShowPhone(true)}
                       >
-                        {showPhone ? ad.phone : "اطلاعات تماس"}
+                        {showPhone ? (
+                          <a href={`tel:`}>{ad.phone}</a>
+                        ) : (
+                          "اطلاعات تماس"
+                        )}
                       </Button>
 
                       <Row gutter={10}>
@@ -185,6 +202,18 @@ const AdsPage = () => {
                         </Col>
                       </Row>
                       {massage && <Alert message={massage} type="success" />}
+                      <Row justify={"end"}>
+                        {ad.urgent && (
+                          <Tag color="red" style={{ marginRight: 8 }}>
+                            فوری
+                          </Tag>
+                        )}
+                        {ad.negotiable && (
+                          <Tag color="blue" style={{ marginRight: 8 }}>
+                            قابل مذاکره
+                          </Tag>
+                        )}
+                      </Row>
                     </Space>
 
                     <Divider style={{ margin: "12px 0" }} />
@@ -240,13 +269,19 @@ const AdsPage = () => {
                     style={{ height: 300, width: "100%" }}
                   >
                     <TileLayer
-                      attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                      attribution='© <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     <Marker position={[ad.location.lat, ad.location.lng]} />
                   </MapContainer>
                 </div>
               )}
+              <ContractPermisens
+                content="بررسی اعتبار آگهی: قبل از تماس با فروشنده، اطلاعات آگهی (مانند قیمت، توضیحات و تصاویر) را به‌دقت بررسی کنید.
+تأیید هویت فروشنده: برای معاملات امن، هویت فروشنده را از طریق اطلاعات تماس یا پیام‌های آگیتو تأیید کنید.
+اجتناب از آگهی‌های مشکوک: آگهی‌هایی که قیمت غیرواقعی یا اطلاعات ناقص دارند را به پشتیبانی گزارش دهید.رعایت حریم خصوصی: از درخواست اطلاعات شخصی غیرضروری از فروشندگان خودداری کنید.آگاهی از قوانین معاملات: قبل از انجام معامله، شرایط و قوانین معاملات آگیتو را مطالعه کنید."
+                title="نکات کلیدی مشاهده آگهی‌ها"
+              />
             </Card>
           </Space>
         </Col>
@@ -255,4 +290,5 @@ const AdsPage = () => {
     </div>
   );
 };
+
 export default AdsPage;

@@ -1,7 +1,11 @@
 import { Alert, Button, ConfigProvider, Form, Input, Typography } from "antd";
 import useSignUp from "./useSignUp";
 
-const SignUp = () => {
+interface SignUpProps {
+  setUser: (user: { username: string; token: string } | null) => void;
+}
+
+const SignUp: React.FC<SignUpProps> = ({ setUser }) => {
   const {
     form,
     handleOTPSubmit,
@@ -12,7 +16,7 @@ const SignUp = () => {
     showOTP,
     showSuccess,
     otpvalue,
-  } = useSignUp();
+  } = useSignUp(setUser);
 
   return (
     <div
@@ -105,4 +109,5 @@ const SignUp = () => {
     </div>
   );
 };
+
 export default SignUp;

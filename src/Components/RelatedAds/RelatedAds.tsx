@@ -109,6 +109,10 @@ const RelatedAds = () => {
                 cover={
                   <Image
                     alt={ad.title}
+                    onError={(error) => {
+                      error.currentTarget.src =
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtEY1E5uyX1bU9au2oF74LoFPdthQlmZ5YIQ&s";
+                    }}
                     src={ad.image}
                     style={{
                       objectFit: "cover",

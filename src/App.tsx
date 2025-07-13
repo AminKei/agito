@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import Home from "./Pages/Home/Home";
-import AddAd from "./Pages/AddAd/AddAd";
+import React, { useState, useEffect, Suspense, lazy } from "react";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import {
   Layout,
   Menu,
@@ -12,25 +10,49 @@ import {
   Drawer,
   Image,
   Switch,
+  Avatar,
 } from "antd";
 import "./App.css";
-import AdsPage from "./Pages/AdsPage/AdsPage";
-import SignUp from "./Pages/SignUp/SignUp";
 import { UserOutlined, PlusOutlined, MenuOutlined } from "@ant-design/icons";
 import Footer from "./Components/Footer/Footer";
 import Notifications from "./Components/Notifications/Notifications";
 import { menuItems } from "./Components/MenuItems/MenuItems";
+import ScreenLoading from "./Components/ScreenLoading/ScreenLoading";
+
+const Home = lazy(() => import("./Pages/Home/Home"));
+const AddAd = lazy(() => import("./Pages/AddAd/AddAd"));
+const AdsPage = lazy(() => import("./Pages/AdsPage/AdsPage"));
+const SignUp = lazy(() => import("./Pages/SignUp/SignUp"));
+const Profile = lazy(() => import("./Pages/Profile/Profile"));
+const RulesPage = lazy(() => import("./Pages/RulesPage/RulesPage"));
 
 const { Header } = Layout;
-const {} = Input;
-const {} = Typography;
+const { Text } = Typography;
 
 const App: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [user, setUser] = useState<{ username: string; token: string } | null>(
+    null
+  );
   const isMobile = window.innerWidth <= 768;
+  const navigate = useNavigate();
+
+  // Check for existing token on mount
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    const username = localStorage.getItem("username");
+    if (token && username) {
+      // Optionally verify token expiration here (simplified for demo)
+      setUser({ username, token });
+    }
+  }, []);
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
   };
 
   return (
@@ -38,7 +60,7 @@ const App: React.FC = () => {
       style={{
         minHeight: "100vh",
         transition: "all 0.3s ease",
-        backgroundColor:"white"
+        backgroundColor: "white",
       }}
     >
       <Header
@@ -46,9 +68,6 @@ const App: React.FC = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          // borderBottom: `1px solid ${
-          //   theme === "light" ? "#e8e8e8" : "#252525"
-          // }`,
           transition: "all 0.3s ease",
         }}
       >
@@ -58,19 +77,24 @@ const App: React.FC = () => {
               ثبت آگهی
             </Button>
           </Link>
-          <Link to="/signup">
-            <Button icon={<UserOutlined />}>
-              {!isMobile && "ورود / ثبت نام"}
+          {user ? (
+            <Button
+              icon={<Avatar size={"small"} icon={<UserOutlined />} />}
+              onClick={handleProfileClick}
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              {!isMobile && (
+                <Text style={{ marginLeft: 8 }}>{user.username}</Text>
+              )}
             </Button>
-          </Link>
+          ) : (
+            <Link to="/signup">
+              <Button icon={<UserOutlined />}>
+                {!isMobile && "ورود / ثبت نام"}
+              </Button>
+            </Link>
+          )}
           <Notifications />
-          {/* <Switch
-            size="default"
-            checked={theme === "dark"}
-            onChange={handleToggle}
-            checkedChildren="🌙"
-            unCheckedChildren="☀️"
-          /> */}
         </Space>
 
         {isMobile ? (
@@ -89,7 +113,7 @@ const App: React.FC = () => {
                   border: "none",
                   textAlign: "right",
                 }}
-                // theme={theme === "light" ? "light" : "dark"}
+                selectedKeys={[window.location.pathname]}
               >
                 {menuItems}
               </Menu>
@@ -102,20 +126,13 @@ const App: React.FC = () => {
               border: "none",
               background: "transparent",
             }}
-            // theme={theme === "light" ? "light" : "dark"}
           >
             {menuItems}
           </Menu>
         )}
 
         <Space style={{ gap: "20px" }}>
-          {/* {!isMobile && ( */}
-            <Typography
-            style={{ color:  "#414eff" }}
-            >
-              آگیتو
-            </Typography>
-          {/* )} */}
+          <Typography style={{ color: "#414eff" }}>آگیتو</Typography>
           <Image
             src={`${process.env.PUBLIC_URL}favicon.png`}
             preview={false}
@@ -125,7 +142,7 @@ const App: React.FC = () => {
               borderRadius: "8px",
               cursor: "pointer",
             }}
-            onClick={(e) => (document.location = "/")}
+            onClick={() => navigate("/")}
           />
         </Space>
       </Header>
@@ -135,15 +152,23 @@ const App: React.FC = () => {
           marginTop: 64,
         }}
       >
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/add" element={<AddAd />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/adspage/:id" element={<AdsPage />} />
-        </Routes>
+        <Suspense fallback={<ScreenLoading />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/add" element={<AddAd />} />
+            <Route path="/rulespage" element={<RulesPage user={null} />} />
+            <Route path="/signup" element={<SignUp setUser={setUser} />} />
+            <Route path="/adspage/:id" element={<AdsPage />} />
+            <Route
+              path="/profile"
+              element={<Profile setUser={setUser} user={user} />}
+            />
+          </Routes>
+        </Suspense>
       </Layout.Content>
       <Footer />
     </Layout>
   );
 };
+
 export default App;

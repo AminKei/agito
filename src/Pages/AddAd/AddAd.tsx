@@ -15,18 +15,20 @@ import {
   InputNumber,
   ConfigProvider,
   Alert,
+  Checkbox, // اضافه کردن Checkbox
 } from "antd";
 import {
   UploadOutlined,
   DollarOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
+import Paragraph from "antd/es/typography/Paragraph";
+import ContractPermisens from "../../Components/ContractPermisens/ContractPermisens";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -60,7 +62,7 @@ const AddAd: React.FC = () => {
     null
   );
   const [showSuccess, setShowSuccess] = useState(false);
-  const [theme, setTheme] = useState<string>("light"); // default to light
+  const [theme, setTheme] = useState<string>("light");
 
   const handleFinish = (values: any) => {
     setLoading(true);
@@ -69,7 +71,7 @@ const AddAd: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target?.result as string;
-        saveAd(values, [imageUrl] as any);
+        saveAd(values, [imageUrl]);
       };
       reader.onerror = () => {
         message.error("خطا در بارگذاری تصویر");
@@ -77,11 +79,11 @@ const AddAd: React.FC = () => {
       };
       reader.readAsDataURL(fileList[0].originFileObj);
     } else {
-      saveAd(values, [] as any);
+      saveAd(values, []);
     }
   };
 
-  const saveAd = (values: any, imageUrl: string | null) => {
+  const saveAd = (values: any, imageUrl: string[]) => {
     try {
       const newAd = {
         id: Date.now().toString(),
@@ -96,6 +98,8 @@ const AddAd: React.FC = () => {
         image: imageUrl,
         date: new Date().toLocaleString(),
         location,
+        urgent: values.urgent || false, // اضافه کردن urgent
+        negotiable: values.negotiable || false, // اضافه کردن negotiable
       };
 
       const storedAds = localStorage.getItem("ads");
@@ -134,11 +138,11 @@ const AddAd: React.FC = () => {
           minHeight: "100vh",
         }}
       >
-        <Col xs={24} sm={24} md={20} lg={16} xl={20} title="">
+        <Col xs={24} sm={24} md={20} lg={16} xl={20}>
           <Card
             bordered={false}
             style={{
-              borderRadius: 8
+              borderRadius: 8,
             }}
             title="افزودن آگهی جدید"
           >
@@ -302,6 +306,18 @@ const AddAd: React.FC = () => {
                   </Form.Item>
                 </Col>
               </Row>
+              <Row gutter={24}>
+                <Col xs={24} md={12}>
+                  <Form.Item name="urgent" valuePropName="checked">
+                    <Checkbox>فوری</Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={12}>
+                  <Form.Item name="negotiable" valuePropName="checked">
+                    <Checkbox>قابل مذاکره</Checkbox>
+                  </Form.Item>
+                </Col>
+              </Row>
               <Form.Item
                 name="address"
                 label="آدرس"
@@ -313,7 +329,6 @@ const AddAd: React.FC = () => {
                 <Input.TextArea rows={3} placeholder="آدرس دقیق را وارد کنید" />
               </Form.Item>
 
-              {/* Location Picker Section */}
               <Form.Item label="موقعیت بر روی نقشه">
                 <div style={{ height: 300, width: "100%", marginBottom: 10 }}>
                   <MapContainer
@@ -367,10 +382,32 @@ const AddAd: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
+            <ContractPermisens
+              content="پلتفرم آگیتو به منظور ایجاد محیطی امن و شفاف برای خرید و فروش آنلاین
+        طراحی شده است. کاربران موظفند اطلاعات دقیق و معتبر ارائه دهند و از
+        انتشار محتوای غیرقانونی، توهین‌آمیز یا گمراه‌کننده خودداری کنند. تمامی
+        آگهی‌ها باید در دسته‌بندی‌های مناسب ثبت شوند و شامل تصاویر مرتبط و
+        قیمت‌های منصفانه باشند. آگیتو هیچ‌گونه مسئولیتی در قبال صحت آگهی‌ها یا
+        نتایج معاملات ندارد و کاربران باید هویت طرف مقابل را پیش از معامله تأیید
+        کنند. استفاده از روش‌های پرداخت امن الزامی است و هرگونه فعالیت
+        کلاهبردارانه یا نقض حریم خصوصی منجر به تعلیق حساب خواهد شد. کیف پول
+        آگیتو تنها از طریق درگاه‌های مجاز قابل شارژ است و موجودی آن غیرقابل
+        انتقال است. کاربران باید قوانین مالکیت معنوی و حریم خصوصی را رعایت کنند
+        و از انتشار محتوای سیاسی، مذهبی یا خشونت‌آمیز خودداری کنند. آگیتو
+        می‌تواند محتوای نامناسب را حذف یا حساب‌های متخلف را مسدود کند. گزارش
+        فعالیت‌های مشکوک به پشتیبانی الزامی است و کاربران باید با پشتیبانی برای
+        حل مشکلات همکاری کنند. آگیتو ممکن است قوانین را به‌روزرسانی کند و
+        کاربران موظفند این تغییرات را بررسی کنند. هعدم آگاهی از قوانین، توجیهی
+        برای نقض آن‌ها نیست. استفاده از آگیتو باید با حسن نیت انجام شود و هرگونه
+        سوءاستفاده از خدمات پلتفرم ممنوع است. آگیتو متعهد به ارائه خدمات با
+        کیفیت است و حق پیگیری قانونی علیه متخلفان را برای خود محفوظ می‌دارد."
+              title="قوانین ثبت آگهی در آگیتو"
+            />
           </Card>
         </Col>
       </Row>
     </ConfigProvider>
   );
 };
+
 export default AddAd;
