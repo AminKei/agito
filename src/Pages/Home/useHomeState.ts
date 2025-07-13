@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Ad } from "../../Models/AdModel"; // Assumed Ad model import
+import { Ad } from "../../Models/AdModel"; // فرض می‌کنیم مدل Ad تعریف شده
+import {  adsData } from "../../ApiData/adsData";
 
 export const useHomeState = () => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000000000]);
@@ -16,71 +17,80 @@ export const useHomeState = () => {
   const isMobile = window.innerWidth <= 768;
   const [showMobileFilter, setShowMobileFilter] = useState<boolean>(false);
 
-  // Load ads from localStorage (or API in a real app)
+  // لود داده‌ها از localStorage یا استفاده از داده‌های پیش‌فرض
   useEffect(() => {
     setLoading(true);
     try {
       const storedAds = localStorage.getItem("ads");
-      const parsedAds: Ad[] = storedAds ? JSON.parse(storedAds) : [];
-      setAds(parsedAds);
-      setFilteredAds(parsedAds);
+      if (storedAds) {
+        const parsedAds: Ad[] = JSON.parse(storedAds);
+        setAds(parsedAds);
+        setFilteredAds(parsedAds);
+      } else {
+        // اگر داده‌ای در localStorage نبود، از داده‌های پیش‌فرض استفاده کن
+        setAds(adsData);
+        setFilteredAds(adsData);
+        localStorage.setItem("ads", JSON.stringify(adsData)); // ذخیره برای دفعات بعدی
+      }
     } catch (error) {
       console.error("Error loading ads:", error);
+      // در صورت خطا، از داده‌های پیش‌فرض استفاده کن
+      setAds(adsData);
+      setFilteredAds(adsData);
+      localStorage.setItem("ads", JSON.stringify(adsData));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Handle search and filtering
+  // اعمال فیلترها و جستجو
   useEffect(() => {
     let result = [...ads];
 
-    // Apply search query
+    // اعمال جستجو
     if (searchQuery) {
       result = result.filter((ad) =>
         ad.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Apply price range filter
+    // اعمال فیلتر محدوده قیمت
     result = result.filter(
       (ad) => ad.price >= priceRange[0] && ad.price <= priceRange[1]
     );
 
-    // Apply city filter
+    // اعمال فیلتر شهر
     if (cityFilter !== "all") {
       result = result.filter((ad) => ad.city === cityFilter);
     }
 
-    // Apply category filter
+    // اعمال فیلتر دسته‌بندی
     if (categoryFilter !== "all") {
       result = result.filter((ad) => ad.category === categoryFilter);
     }
 
-    // Apply condition filter
+    // اعمال فیلتر وضعیت
     if (conditionFilter !== "all") {
       result = result.filter((ad) => ad.condition === conditionFilter);
     }
 
-    // Apply urgent filter (only when true)
+    // اعمال فیلتر فوری (فقط وقتی true باشه)
     if (urgentFilter === "true") {
       result = result.filter((ad) => ad.urgent === true);
     }
-    // Note: No else clause; when urgentFilter is "false", skip filtering (equivalent to "all")
 
-    // Apply negotiable filter (only when true)
+    // اعمال فیلتر قابل مذاکره (فقط وقتی true باشه)
     if (negotiableFilter === "true") {
       result = result.filter((ad) => ad.negotiable === true);
     }
-    // Note: No else clause; when negotiableFilter is "false", skip filtering (equivalent to "all")
 
-    // Apply sorting
+    // اعمال مرتب‌سازی
     switch (sortBy) {
       case "newest":
-        result.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+        result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         break;
       case "oldest":
-        result.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         break;
       case "priceLow":
         result.sort((a, b) => a.price - b.price);
@@ -103,15 +113,16 @@ export const useHomeState = () => {
     sortBy,
   ]);
 
-  // Handle search input
+  // مدیریت جستجو
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  // Handle ad deletion
+  // مدیریت حذف آگهی
   const handleDelete = (id: string) => {
     const updatedAds = ads.filter((ad) => ad.id !== id);
     setAds(updatedAds);
+    setFilteredAds(updatedAds);
     localStorage.setItem("ads", JSON.stringify(updatedAds));
   };
 

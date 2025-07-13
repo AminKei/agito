@@ -309,12 +309,36 @@ const AddAd: React.FC = () => {
               <Row gutter={24}>
                 <Col xs={24} md={12}>
                   <Form.Item name="urgent" valuePropName="checked">
-                    <Checkbox>فوری</Checkbox>
+                    <Checkbox
+                      style={{
+                        border: "1px solid #d9d9d9",
+                        padding: "8px",
+                        borderRadius: "6px",
+                        width: "100%",
+                        background: "#fafafa",
+                      }}
+                    >
+                      <span style={{ fontSize: "14px", fontWeight: 500 }}>
+                        فوری
+                      </span>
+                    </Checkbox>
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={12}>
                   <Form.Item name="negotiable" valuePropName="checked">
-                    <Checkbox>قابل مذاکره</Checkbox>
+                    <Checkbox
+                      style={{
+                        border: "1px solid #d9d9d9",
+                        padding: "8px",
+                        borderRadius: "6px",
+                        width: "100%",
+                        background: "#fafafa",
+                      }}
+                    >
+                      <span style={{ fontSize: "14px", fontWeight: 500 }}>
+                        قابل مذاکره
+                      </span>
+                    </Checkbox>
                   </Form.Item>
                 </Col>
               </Row>
