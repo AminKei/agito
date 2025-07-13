@@ -11,7 +11,7 @@
     "date": "2025-07-10",
     "address": "تهران، خیابان ولیعصر، کوچه دوم",
     "phone": "09123456789",
-    "location": { "lat": 35.6892, "lng": 51.3890 },
+    "location": { "lat": 35.6892, "lng": 51.389 },
     "urgent": false,
     "negotiable": true
   },
@@ -23,7 +23,9 @@
     "price": 250000000,
     "condition": "used",
     "city": "mashhad",
-    "image": ["https://www.bama.ir/images/cars/pride-131-white.jpg"],
+    "image": [
+      "https://mediablog.khodro45.com/image/2021/07/800px-Saipa_Pride_131_SE_2013_1392_Tehran_rear.jpg"
+    ],
     "date": "2025-07-09",
     "address": "مشهد، بلوار وکیل‌آباد",
     "phone": "09151234567",
@@ -39,7 +41,9 @@
     "price": 5000000000,
     "condition": "new",
     "city": "tehran",
-    "image": ["https://www.divar.ir/static/images/property-tehran-100m.jpg", "https://www.ihome.ir/images/apartment-saadatabad-2025.jpg"],
+    "image": [
+      "https://www.bazarbanks.com/wp-content/uploads/2023/07/6d53a6c060605c6bf356f19d3a0d6131__chImage-1-1024x768.jpeg"
+    ],
     "date": "2025-07-08",
     "address": "تهران، سعادت‌آباد، خیابان سرو",
     "phone": "09187654321",
@@ -71,11 +75,14 @@
     "price": 18000000,
     "condition": "like-new",
     "city": "isfahan",
-    "image": ["https://www.mobliran.com/images/sofa-7nafare-2025.jpg", "https://www.mobl24.ir/images/sofa-luxury-2025.jpg"],
+    "image": [
+      "https://www.mobliran.com/images/sofa-7nafare-2025.jpg",
+      "https://www.mobl24.ir/images/sofa-luxury-2025.jpg"
+    ],
     "date": "2025-07-06",
     "address": "اصفهان، خیابان چهارباغ",
     "phone": "09134567890",
-    "location": { "lat": 32.6539, "lng": 51.6660 },
+    "location": { "lat": 32.6539, "lng": 51.666 },
     "urgent": true,
     "negotiable": true
   },
@@ -155,7 +162,7 @@
     "date": "2025-07-01",
     "address": "کرمانشاه، خیابان مدرس",
     "phone": "09187654321",
-    "location": { "lat": 34.3142, "lng": 47.0650 },
+    "location": { "lat": 34.3142, "lng": 47.065 },
     "urgent": false,
     "negotiable": true
   },
@@ -167,7 +174,9 @@
     "price": 20000000,
     "condition": "used",
     "city": "shiraz",
-    "image": ["https://emalls.ir/files/cms/automatic/346768/lenovo-thinkpad.jpg"],
+    "image": [
+      "https://emalls.ir/files/cms/automatic/346768/lenovo-thinkpad.jpg"
+    ],
     "date": "2025-06-30",
     "address": "شیراز، خیابان قاآنی",
     "phone": "09165432109",
@@ -203,7 +212,7 @@
     "date": "2025-06-28",
     "address": "اصفهان، چهارباغ بالا",
     "phone": "09134567891",
-    "location": { "lat": 32.6579, "lng": 51.6760 },
+    "location": { "lat": 32.6579, "lng": 51.676 },
     "urgent": false,
     "negotiable": true
   },
@@ -219,7 +228,7 @@
     "date": "2025-06-27",
     "address": "مشهد، بلوار سجاد",
     "phone": "09151234566",
-    "location": { "lat": 36.2970, "lng": 59.6062 },
+    "location": { "lat": 36.297, "lng": 59.6062 },
     "urgent": true,
     "negotiable": false
   },
@@ -267,7 +276,7 @@
     "date": "2025-06-24",
     "address": "کرمانشاه، خیابان شریعتی",
     "phone": "09187654320",
-    "location": { "lat": 34.3142, "lng": 47.0650 },
+    "location": { "lat": 34.3142, "lng": 47.065 },
     "urgent": true,
     "negotiable": true
   },

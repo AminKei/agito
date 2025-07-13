@@ -1,15 +1,13 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Layout,
   Menu,
-  Input,
   Button,
   Space,
   Typography,
   Drawer,
   Image,
-  Switch,
   Avatar,
 } from "antd";
 import "./App.css";
@@ -17,14 +15,7 @@ import { UserOutlined, PlusOutlined, MenuOutlined } from "@ant-design/icons";
 import Footer from "./Components/Footer/Footer";
 import Notifications from "./Components/Notifications/Notifications";
 import { menuItems } from "./Components/MenuItems/MenuItems";
-import ScreenLoading from "./Components/ScreenLoading/ScreenLoading";
-
-const Home = lazy(() => import("./Pages/Home/Home"));
-const AddAd = lazy(() => import("./Pages/AddAd/AddAd"));
-const AdsPage = lazy(() => import("./Pages/AdsPage/AdsPage"));
-const SignUp = lazy(() => import("./Pages/SignUp/SignUp"));
-const Profile = lazy(() => import("./Pages/Profile/Profile"));
-const RulesPage = lazy(() => import("./Pages/RulesPage/RulesPage"));
+import RoutesConfig from "./Config/Routes/RoutesConfig";
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -37,12 +28,10 @@ const App: React.FC = () => {
   const isMobile = window.innerWidth <= 768;
   const navigate = useNavigate();
 
-  // Check for existing token on mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const username = localStorage.getItem("username");
     if (token && username) {
-      // Optionally verify token expiration here (simplified for demo)
       setUser({ username, token });
     }
   }, []);
@@ -84,7 +73,7 @@ const App: React.FC = () => {
               style={{ display: "flex", alignItems: "center" }}
             >
               {!isMobile && (
-                <Text style={{ marginLeft: 8 }}>{user.username}</Text>
+                <Text style={{ marginLeft: 8 }}>{user.username && "علی کریمی"}</Text>
               )}
             </Button>
           ) : (
@@ -152,19 +141,7 @@ const App: React.FC = () => {
           marginTop: 64,
         }}
       >
-        <Suspense fallback={<ScreenLoading />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/add" element={<AddAd />} />
-            <Route path="/rulespage" element={<RulesPage user={null} />} />
-            <Route path="/signup" element={<SignUp setUser={setUser} />} />
-            <Route path="/adspage/:id" element={<AdsPage />} />
-            <Route
-              path="/profile"
-              element={<Profile setUser={setUser} user={user} />}
-            />
-          </Routes>
-        </Suspense>
+        <RoutesConfig user={user} setUser={setUser} />
       </Layout.Content>
       <Footer />
     </Layout>

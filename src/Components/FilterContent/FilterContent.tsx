@@ -1,5 +1,5 @@
 import React from "react";
-import { Select, Space } from "antd";
+import { Select, Space, Switch, Typography } from "antd";
 
 interface FilterContentProps {
   priceRange: [number, number];
@@ -45,7 +45,6 @@ const FilterContent: React.FC<FilterContentProps> = ({
         zIndex: 1000,
       }}
     >
-      {/* Price Range Dropdown */}
       <div>
         <p
           style={{
@@ -114,7 +113,6 @@ const FilterContent: React.FC<FilterContentProps> = ({
           </Select.Option>
         </Select>
       </div>
-      {/* City Filter */}
       <div>
         <p
           style={{
@@ -139,7 +137,6 @@ const FilterContent: React.FC<FilterContentProps> = ({
           <Select.Option value="karaj">کرج</Select.Option>
         </Select>
       </div>
-      {/* Category Filter */}
       <div>
         <p
           style={{
@@ -166,7 +163,6 @@ const FilterContent: React.FC<FilterContentProps> = ({
           <Select.Option value="books">کتاب و لوازم التحریر</Select.Option>
         </Select>
       </div>
-      {/* Condition Filter */}
       <div>
         <p
           style={{
@@ -189,8 +185,22 @@ const FilterContent: React.FC<FilterContentProps> = ({
           <Select.Option value="needs-repair">نیاز به تعمیر</Select.Option>
         </Select>
       </div>
-      {/* Urgent Filter */}
-      <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: "7px",
+          border: "solid 1px #dadada",
+          padding: "5px",
+          height: "40px",
+          marginTop: "2vh",
+        }}
+      >
+        <Switch
+          checked={urgentFilter === "true"}
+          onChange={(checked) => setUrgentFilter(checked ? "true" : "false")}
+        />
         <p
           style={{
             marginBottom: "8px",
@@ -200,18 +210,25 @@ const FilterContent: React.FC<FilterContentProps> = ({
         >
           فوری
         </p>
-        <Select
-          style={{ width: "100%" }}
-          value={urgentFilter}
-          onChange={(value) => setUrgentFilter(value)}
-        >
-          <Select.Option value="all">همه</Select.Option>
-          <Select.Option value="true">فوری</Select.Option>
-          <Select.Option value="false">غیرفوری</Select.Option>
-        </Select>
       </div>
-      {/* Negotiable Filter */}
-      <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: "7px",
+          border: "solid 1px #dadada",
+          padding: "5px",
+          height: "40px",
+          marginTop: "2vh",
+        }}
+      >
+        <Switch
+          checked={negotiableFilter === "true"}
+          onChange={(checked) =>
+            setNegotiableFilter(checked ? "true" : "false")
+          }
+        />
         <p
           style={{
             marginBottom: "8px",
@@ -221,17 +238,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
         >
           قابل مذاکره
         </p>
-        <Select
-          style={{ width: "100%" }}
-          value={negotiableFilter}
-          onChange={(value) => setNegotiableFilter(value)}
-        >
-          <Select.Option value="all">همه</Select.Option>
-          <Select.Option value="true">قابل مذاکره</Select.Option>
-          <Select.Option value="false">غیرقابل مذاکره</Select.Option>
-        </Select>
       </div>
-      {/* Sorting */}
       <div>
         <p
           style={{

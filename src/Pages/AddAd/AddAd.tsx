@@ -26,7 +26,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
+import { RootState } from "../../Config/Redux/Store";
 import Paragraph from "antd/es/typography/Paragraph";
 import ContractPermisens from "../../Components/ContractPermisens/ContractPermisens";
 

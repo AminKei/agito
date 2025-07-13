@@ -1,104 +1,121 @@
 import { useState, useEffect } from "react";
-import { message } from "antd";
-import { Ad } from "../../Models/AdModel";
-import adsData from "../../ApiData/adsData.json";
+import { Ad } from "../../Models/AdModel"; // Assumed Ad model import
 
 export const useHomeState = () => {
-  const [ads, setAds] = useState<Ad[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000000000]);
   const [conditionFilter, setConditionFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [cityFilter, setCityFilter] = useState<string>("all");
-  const [urgentFilter, setUrgentFilter] = useState<string>("all"); // فیلتر جدید برای urgent
-  const [negotiableFilter, setNegotiableFilter] = useState<string>("all"); // فیلتر جدید برای negotiable
+  const [urgentFilter, setUrgentFilter] = useState<string>("false");
+  const [negotiableFilter, setNegotiableFilter] = useState<string>("false");
   const [sortBy, setSortBy] = useState<string>("newest");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [ads, setAds] = useState<Ad[]>([]);
+  const [filteredAds, setFilteredAds] = useState<Ad[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1400);
-  const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const isMobile = window.innerWidth <= 768;
+  const [showMobileFilter, setShowMobileFilter] = useState<boolean>(false);
 
+  // Load ads from localStorage (or API in a real app)
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
+    setLoading(true);
     try {
-      setLoading(true);
       const storedAds = localStorage.getItem("ads");
-      if (storedAds) {
-        const parsedAds = JSON.parse(storedAds);
-        setAds(parsedAds);
-      } else {
-        setAds(adsData);
-        localStorage.setItem("ads", JSON.stringify(adsData));
-      }
-      console.log("Loaded ads count:", ads.length);
+      const parsedAds: Ad[] = storedAds ? JSON.parse(storedAds) : [];
+      setAds(parsedAds);
+      setFilteredAds(parsedAds);
     } catch (error) {
       console.error("Error loading ads:", error);
-      message.error("خطا در بارگذاری آگهی‌ها");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const handleDelete = (id: string) => {
-    try {
-      const updatedAds = ads.filter((ad) => ad.id !== id);
-      setAds(updatedAds);
-      localStorage.setItem("ads", JSON.stringify(updatedAds));
-      message.success("آگهی با موفقیت حذف شد");
-    } catch (error) {
-      console.error("Error deleting ad:", error);
-      message.error("خطا در حذف آگهی");
+  // Handle search and filtering
+  useEffect(() => {
+    let result = [...ads];
+
+    // Apply search query
+    if (searchQuery) {
+      result = result.filter((ad) =>
+        ad.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
+
+    // Apply price range filter
+    result = result.filter(
+      (ad) => ad.price >= priceRange[0] && ad.price <= priceRange[1]
+    );
+
+    // Apply city filter
+    if (cityFilter !== "all") {
+      result = result.filter((ad) => ad.city === cityFilter);
+    }
+
+    // Apply category filter
+    if (categoryFilter !== "all") {
+      result = result.filter((ad) => ad.category === categoryFilter);
+    }
+
+    // Apply condition filter
+    if (conditionFilter !== "all") {
+      result = result.filter((ad) => ad.condition === conditionFilter);
+    }
+
+    // Apply urgent filter (only when true)
+    if (urgentFilter === "true") {
+      result = result.filter((ad) => ad.urgent === true);
+    }
+    // Note: No else clause; when urgentFilter is "false", skip filtering (equivalent to "all")
+
+    // Apply negotiable filter (only when true)
+    if (negotiableFilter === "true") {
+      result = result.filter((ad) => ad.negotiable === true);
+    }
+    // Note: No else clause; when negotiableFilter is "false", skip filtering (equivalent to "all")
+
+    // Apply sorting
+    switch (sortBy) {
+      case "newest":
+        result.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+        break;
+      case "oldest":
+        result.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        break;
+      case "priceLow":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "priceHigh":
+        result.sort((a, b) => b.price - a.price);
+        break;
+    }
+
+    setFilteredAds(result);
+  }, [
+    ads,
+    searchQuery,
+    priceRange,
+    cityFilter,
+    categoryFilter,
+    conditionFilter,
+    urgentFilter,
+    negotiableFilter,
+    sortBy,
+  ]);
+
+  // Handle search input
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
-  const handleSearch = (value: string) => {
-    setSearchQuery(value);
+  // Handle ad deletion
+  const handleDelete = (id: string) => {
+    const updatedAds = ads.filter((ad) => ad.id !== id);
+    setAds(updatedAds);
+    localStorage.setItem("ads", JSON.stringify(updatedAds));
   };
-
-  const toggleMobileFilter = () => {
-    setShowMobileFilter(!showMobileFilter);
-  };
-
-  const filteredAds = ads
-    .filter((ad) => {
-      if (
-        searchQuery &&
-        !Object.values(ad).some((value) =>
-          String(value).toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      )
-        return false;
-      const [minPrice, maxPrice] = priceRange;
-      if (ad.price < minPrice || ad.price > maxPrice) return false;
-      if (conditionFilter !== "all" && ad.condition !== conditionFilter)
-        return false;
-      if (categoryFilter !== "all" && ad.category !== categoryFilter)
-        return false;
-      if (cityFilter !== "all" && ad.city !== cityFilter) return false;
-      if (urgentFilter !== "all" && ad.urgent !== (urgentFilter === "true"))
-        return false; // فیلتر urgent
-      if (negotiableFilter !== "all" && ad.negotiable !== (negotiableFilter === "true"))
-        return false; // فیلتر negotiable
-      return true;
-    })
-    .sort((a, b) => {
-      if (sortBy === "newest")
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      if (sortBy === "oldest")
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-      if (sortBy === "priceLow") return a.price - b.price;
-      if (sortBy === "priceHigh") return b.price - a.price;
-      return 0;
-    });
 
   return {
-    ads,
     priceRange,
     setPriceRange,
     conditionFilter,
@@ -114,13 +131,11 @@ export const useHomeState = () => {
     sortBy,
     setSortBy,
     loading,
-    searchQuery,
     isMobile,
     showMobileFilter,
     setShowMobileFilter,
     handleDelete,
     handleSearch,
-    toggleMobileFilter,
     filteredAds,
   };
 };

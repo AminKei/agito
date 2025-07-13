@@ -1,6 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Menu, MenuProps, Layout, Drawer, Button, Card, Typography, List, Empty, Spin, Input, Row, Col } from "antd";
-import { UserOutlined, FileTextOutlined, WalletOutlined, MenuOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  Menu,
+  MenuProps,
+  Layout,
+  Drawer,
+  Button,
+  Card,
+  Typography,
+  List,
+  Empty,
+  Spin,
+  Input,
+  Row,
+  Col,
+} from "antd";
+import {
+  UserOutlined,
+  FileTextOutlined,
+  WalletOutlined,
+  MenuOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { Ad } from "../../Models/AdModel";
 import { formatPrice } from "../../Hooks/formatPrice";
 import { Link, useNavigate } from "react-router-dom";
@@ -104,10 +124,12 @@ const Profile: React.FC<ProfileProps> = ({ user, setUser }) => {
     <Card title="اطلاعات کاربری" bordered={false}>
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
-          <Text strong>نام کاربری:</Text> <Text>{user?.username || "نامشخص"}</Text>
+          <Text strong>نام کاربری:</Text>{" "}
+          <Text>{(user?.username && "علی کریمی") || "نامشخص"}</Text>
         </Col>
         <Col xs={24} md={12}>
-          <Text strong>شماره تماس:</Text> <Text>{user?.username ? `0${user.username}` : "نامشخص"}</Text>
+          <Text strong>شماره تماس:</Text>{" "}
+          <Text>{user?.username ? `0${user.username}` : "نامشخص"}</Text>
         </Col>
         <Col xs={24} md={12}>
           <Text strong>ایمیل:</Text> <Text>ثبت نشده</Text>
@@ -157,8 +179,13 @@ const Profile: React.FC<ProfileProps> = ({ user, setUser }) => {
                 <Card.Meta
                   title={
                     <Link to={`/ads/${ad.id}`}>
-                      {ad.title} {ad.urgent && <span style={{ color: "red" }}>(فوری)</span>}
-                      {ad.negotiable && <span style={{ color: "blue" }}>(قابل مذاکره)</span>}
+                      {ad.title}{" "}
+                      {ad.urgent && (
+                        <span style={{ color: "red" }}>(فوری)</span>
+                      )}
+                      {ad.negotiable && (
+                        <span style={{ color: "blue" }}>(قابل مذاکره)</span>
+                      )}
                     </Link>
                   }
                   description={

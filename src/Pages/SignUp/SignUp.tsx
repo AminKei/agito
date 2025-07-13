@@ -71,7 +71,7 @@ const SignUp: React.FC<SignUpProps> = ({ setUser }) => {
               ]}
             >
               <Input.Password
-                placeholder="کد تایید را وارد کنید"
+                placeholder="کد تایید را وارد کنید (431291)"
                 maxLength={6}
                 value={otpvalue}
                 onChange={(e) => setotpvalue(Number(e.target.value))}
