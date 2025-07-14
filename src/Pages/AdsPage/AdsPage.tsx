@@ -32,6 +32,7 @@ import {
 import RelatedAds from "../../Components/RelatedAds/RelatedAds";
 import { formatPrice } from "../../Hooks/formatPrice";
 import ContractPermisens from "../../Components/ContractPermisens/ContractPermisens";
+import { ShowAdsRuls } from "../../Tips/RulsTips";
 
 const { Title, Text } = Typography;
 
@@ -91,7 +92,7 @@ const AdsPage = () => {
     );
 
   return (
-    <div style={{ minHeight: "100vh", textAlign: "right" }}>
+    <div style={{ minHeight: "100vh", textAlign: "right", padding:"0px" }}>
       <Row justify="center" gutter={[16, 16]}>
         <Col xs={24} sm={22} md={20} lg={18} xl={16}>
           <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -126,7 +127,7 @@ const AdsPage = () => {
                           style={{
                             width: "100%",
                             borderRadius: "8px",
-                            height: "400px",
+                            height: "380px",
                             objectFit: "cover",
                           }}
                         />
@@ -277,9 +278,7 @@ const AdsPage = () => {
                 </div>
               )}
               <ContractPermisens
-                content="بررسی اعتبار آگهی: قبل از تماس با فروشنده، اطلاعات آگهی (مانند قیمت، توضیحات و تصاویر) را به‌دقت بررسی کنید.
-تأیید هویت فروشنده: برای معاملات امن، هویت فروشنده را از طریق اطلاعات تماس یا پیام‌های آگیتو تأیید کنید.
-اجتناب از آگهی‌های مشکوک: آگهی‌هایی که قیمت غیرواقعی یا اطلاعات ناقص دارند را به پشتیبانی گزارش دهید."
+                content={ShowAdsRuls}
                 title="نکات کلیدی مشاهده آگهی‌ها"
               />
             </Card>

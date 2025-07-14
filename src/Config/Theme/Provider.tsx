@@ -47,7 +47,7 @@ const ThemeProvider = ({ children }: ThemeProviderProps) => {
   return (
     <ThemeContext.Provider value={providerValue}>
       <ConfigProvider
-        direction="rtl"
+        direction="ltr"
         theme={{
         //   ...antThemConfig,
           algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,

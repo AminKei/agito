@@ -39,9 +39,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
       direction="vertical"
       style={{
         width: "100%",
-        gap: "15px",
-        marginTop: "3px",
-        backgroundColor: "white",
+        gap: "12px",
         zIndex: 1000,
       }}
     >
@@ -78,6 +76,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
               setPriceRange([0, 1000000000000]);
             }
           }}
+          direction="rtl"
         >
           <Select.Option value="">همه</Select.Option>
           <Select.Option value="0 - 1000000">0 - 1 میلیون</Select.Option>
@@ -127,6 +126,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
           style={{ width: "100%" }}
           value={cityFilter}
           onChange={(value) => setCityFilter(value)}
+          direction="rtl"
         >
           <Select.Option value="all">همه</Select.Option>
           <Select.Option value="tehran">تهران</Select.Option>
@@ -151,6 +151,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
           style={{ width: "100%" }}
           value={categoryFilter}
           onChange={(value) => setCategoryFilter(value)}
+          direction="rtl"
         >
           <Select.Option value="all">همه</Select.Option>
           <Select.Option value="electronics">الکترونیک</Select.Option>
@@ -177,6 +178,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
           style={{ width: "100%" }}
           value={conditionFilter}
           onChange={(value) => setConditionFilter(value)}
+          direction="rtl"
         >
           <Select.Option value="all">همه</Select.Option>
           <Select.Option value="new">نو</Select.Option>
@@ -253,6 +255,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
           style={{ width: "100%" }}
           value={sortBy}
           onChange={(value) => setSortBy(value)}
+          direction="rtl"
         >
           <Select.Option value="newest">جدیدترین</Select.Option>
           <Select.Option value="oldest">قدیمی‌ترین</Select.Option>

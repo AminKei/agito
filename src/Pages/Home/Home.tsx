@@ -54,7 +54,8 @@ const Home: React.FC = () => {
         style={{
           flex: 1,
           padding: "0px",
-          background: "#fff",
+          marginLeft:"-2vh",
+          background: "#ffffff",
         }}
       >
         <div
