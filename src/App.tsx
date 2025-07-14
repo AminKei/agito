@@ -68,12 +68,12 @@ const App: React.FC = () => {
           </Link>
           {user ? (
             <Button
-              icon={<Avatar size={"small"} icon={<UserOutlined />} />}
+              icon={<Avatar size={"small"}  icon={<UserOutlined />} />}
               onClick={handleProfileClick}
               style={{ display: "flex", alignItems: "center" }}
             >
               {!isMobile && (
-                <Text style={{ marginLeft: 8 }}>{user.username && "علی کریمی"}</Text>
+                <Text style={{ marginLeft: 8 }}>{user.username && "حساب کاریری"}</Text>
               )}
             </Button>
           ) : (

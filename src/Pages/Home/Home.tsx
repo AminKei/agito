@@ -133,6 +133,7 @@ const Home: React.FC = () => {
           onClose={() => setShowMobileFilter(false)}
           open={showMobileFilter}
           width="80%"
+          style={{marginTop:"8vh"}}
         >
           <FilterContent
             priceRange={priceRange}

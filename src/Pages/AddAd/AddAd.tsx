@@ -158,9 +158,11 @@ const AddAd: React.FC = () => {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  zIndex: 1000,
+                  zIndex: 1000000,
+                  width:"300px",
+                  height:"100px",
                   textAlign: "center",
-                  padding: "40px 140px",
+                  padding: "10px 20px",
                   fontSize: "20px",
                 }}
               />

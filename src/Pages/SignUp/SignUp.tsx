@@ -65,6 +65,7 @@ const SignUp: React.FC<SignUpProps> = ({ setUser }) => {
             </Typography.Text>
             <Form.Item
               name="otp"
+              style={{ textAlign: "right" }}
               rules={[
                 { required: true, message: "لطفا کد تایید را وارد کنید" },
                 { len: 6, message: "کد تایید باید ۶ رقم باشد" },
@@ -98,10 +99,12 @@ const SignUp: React.FC<SignUpProps> = ({ setUser }) => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              zIndex: 1000,
+              zIndex: 1000000,
+              width: "300px",
+              height: "100px",
               textAlign: "center",
-              padding: "40px 140px",
-              fontSize: "20px",
+              padding: "10px 20px",
+              fontSize: "17px",
             }}
           />
         )}
