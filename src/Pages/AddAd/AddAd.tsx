@@ -141,7 +141,7 @@ const AddAd: React.FC = () => {
       >
         <Col xs={24} sm={24} md={20} lg={16} xl={20}>
           <Card
-            bordered={false}
+            variant="outlined"
             style={{
               borderRadius: 8,
             }}
@@ -167,7 +167,6 @@ const AddAd: React.FC = () => {
                 }}
               />
             )}
-            <Divider />
             <Form
               form={form}
               layout="vertical"
